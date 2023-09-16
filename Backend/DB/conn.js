@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
-
-mongoose.connect('mongodb+srv://Shivsaran:Shiva@cluster0.yqoiifk.mongodb.net/?retryWrites=true&w=majority/DocSafer').then(()=>{
-    console.log('connected to db');
-}).catch((e)=>{
-    console.log('error occured', e)
+const pass = "Ashwin17"
+mongoose.connect(`mongodb+srv://ashwinkaranthamalai:${pass}@cluster0.qm1hj66.mongodb.net/DocSafer`).then(()=>{
+    console.log('DB connection succesfull');
+}).catch((err)=>{
+    console.log("error occuerred in DB connection ", err);
 })

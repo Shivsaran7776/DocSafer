@@ -1,16 +1,19 @@
-const express =require('express');
-const app = express();
-const cors = require('cors');
+const express = require('express')
+const app = express()
+const cors = require('cors')
 
-app.use(express.json());
+app.use(express.json())
 
 app.use(cors({
-    origin:"*",
+    origin:"*"
 }))
 
-const port = process.env.port||8000;
-require("./DB/conn");
+require('./DB/conn')
 
-app.listen(port,()=>{
-    console.log("Connected Successfu to the port",port);
+const Routes = require('./Routes/userroutes')
+app.use(Routes)
+
+const PORT = process.env.port|| 8080
+app.listen(PORT, ()=>{
+    console.log(`Server is running on port ${PORT}`)
 })
