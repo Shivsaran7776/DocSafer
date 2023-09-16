@@ -5,9 +5,11 @@ import Btn from './Btn';
 import {darkGreen} from './Constants';
 import Field from './Field';
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
 
 const Signup = (props) => {
+  const navigation = useNavigation()
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');

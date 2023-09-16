@@ -5,8 +5,10 @@ import Btn from './Btn';
 import { darkGreen } from './Constants';
 import Field from './Field';
 import axios from 'axios'
+import { useNavigation } from '@react-navigation/native';
 
 const Login = (props) => {
+  const navigation = useNavigation()
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [userData, setUserData] = useState(null);

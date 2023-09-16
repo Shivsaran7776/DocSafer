@@ -5,13 +5,13 @@ import Btn from './Btn';
 import { darkGreen, green } from './Constants';
 import { StatusBar } from 'expo-status-bar';
 import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
-
-function UploadFile(props) {
-
+const UploadFile=(props)=> {
+  
   const handleSubmit = ()=>{
     axios.post('http://192.168.50.9:6080/newpost',{
-
+      
     })
   }
   return (
