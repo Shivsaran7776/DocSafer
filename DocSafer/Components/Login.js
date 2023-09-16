@@ -18,11 +18,11 @@ const Login = (props) => {
     }
   
     const userData = { email:email, password:password};
-    axios.post('https://docsafer-mad.onrender.com/login', userData)
+    axios.post('http://192.168.1.2:6080/login', userData)
       .then((res)=>{
         if(res.data.status==500){
           alert('Successfullly Logined In');
-
+          navigation.navigate("HomeScreen");
         }
         else{
           alert(res.data.message);

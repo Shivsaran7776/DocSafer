@@ -28,7 +28,7 @@ const Signup = (props) => {
     } else if (password !== confirmPassword) {
       alert('Passwords do not match.');
     } else {
-      axios.post('https://docsafer-mad.onrender.com/insert', {
+      axios.post('http://192.168.1.2:6080/insert', {
         name:firstName+lastName,
         email:email,
         password:password
