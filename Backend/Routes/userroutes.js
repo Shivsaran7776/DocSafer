@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
   });
 
 
-  const upload = multer({ storage: storage })
+  const upload = multer({ storage: storage })   
 
 router.post('/insert', async(req, res)=>{
     console.log('request form the Mobile', req.body);

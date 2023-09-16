@@ -10,9 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 const UploadFile=(props)=> {
   
   const handleSubmit = ()=>{
-    axios.post('http://192.168.50.9:6080/newpost',{
-      
-    })
+   
   }
   return (
     <Background>
