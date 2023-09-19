@@ -1,9 +1,5 @@
 const mongoose = require('mongoose')
 const pdf = new mongoose.Schema({
-    title:{
-        type:String,
-        required:true
-    },
     email:{
         type:String,
         required:true

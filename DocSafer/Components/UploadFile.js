@@ -9,7 +9,14 @@ import { useNavigation } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
 import MyModal from './Modal'; 
 
-const UploadFile = () => {
+const UploadFile = ({props}) => {
+  const { data:Email } = props.params.state;
+  const navigation = useNavigation()
+  const [title, setTitle] = useState('')
+  const [email, setEmail] = useState('')
+  const [date, setDate]= useState('')
+  setEmail(Email)
+  console.log('fromt he upload checkl',email)
   const [selectedFile, setSelectedFile] = useState([])
 
   const handleFilePick = async () => {
@@ -17,11 +24,11 @@ const UploadFile = () => {
       const result = await DocumentPicker.getDocumentAsync({ type: 'application/pdf' });
       console.log('hi')
       console.log('result', result)
-      if (result.type === 'success') {
-    }
-      setSelectedFile(result.assets[0]);
-      console.log('from the test file',result.assets[0])
-      console.log('selected file', selectedFile.name)
+      if (result.assets[0]) {
+        setSelectedFile(result.assets[0]);
+        console.log('from the test file',result.assets[0])
+        console.log('selected file', selectedFile.name)
+      }
     } catch (err) {
       console.error(err);
     }
@@ -30,14 +37,18 @@ const UploadFile = () => {
   const handleUpload = async () => {
     if (selectedFile) {
       const formData = new FormData();
+      formData.append('fileName',selectedFile.name )
+      const currentdate = new Date();
+      formData.append('date', currentdate.getDate())
+      console.log(currentdate.getDate())
       formData.append('pdfFile', {
         uri: selectedFile.uri,
         type: 'application/pdf',
-        name: 'sample.pdf'  
+        name: selectedFile.name  
     });
 
       try {
-        const response = await axios.post('http://192.168.1.5:8080/uploadpdf', formData, {
+        const response = await axios.post('http://192.168.1.30:6080/uploadpdf', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -45,14 +56,21 @@ const UploadFile = () => {
 
         if (response.status === 200) {
           console.log('File uploaded successfully.');
+          alert('File uploaded successfully.')
+          navigation.navigate('HomeScreen')
         } else {
           console.log('File upload failed. Server returned:', response.data);
+          alert('Error Occured in file upload')
+          navigation.navigate('HomeScreen')
+
         }
       } catch (error) {
         console.error('Error uploading file:', error);
+        alert('Error Occured in file upload')
       }
     } else {
       console.log('No file selected.');
+      alert('No File Selected')
     }
   };
   return (
@@ -62,6 +80,7 @@ const UploadFile = () => {
         <View style={styles.container2}>
           <Button title="Select PDF" onPress={handleFilePick} />
           {selectedFile && <Text>{selectedFile.name}</Text>}
+          
           <Button title="Upload PDF" onPress={handleUpload} disabled={!selectedFile} />
         </View>
       </SafeAreaView>
@@ -74,9 +93,14 @@ export default UploadFile;
 const styles = StyleSheet.create({
   container2:{
     flex: 2,
-    marginTop:20,
+    borderRadius:10,
+    marginTop:330,
+    marginLeft:110,
+    width:200,
+    height:250,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor:'white',
   },
   container: {
     alignItems: 'center',

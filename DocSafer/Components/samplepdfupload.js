@@ -31,7 +31,7 @@ const PdfUpload = () => {
     });
 
       try {
-        const response = await axios.post('http://192.168.1.5:8080/uploadpdf', formData, {
+        const response = await axios.post('http://192.168.1.30:6080/uploadpdf', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

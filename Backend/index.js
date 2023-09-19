@@ -13,7 +13,7 @@ require('./DB/conn')
 const Routes = require('./Routes/userroutes')
 app.use(Routes)
 
-const PORT = process.env.port|| 8080
+const PORT = process.env.port|| 6080
 app.listen(PORT, ()=>{
     console.log(`Server is running on port ${PORT}`)
 })
