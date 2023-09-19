@@ -23,7 +23,7 @@ const Login = (props) => {
     axios.post('http://192.168.1.5:8080/login', userData)
       .then((res)=>{
         if(res.data.status==500){
-          alert('Successfullly Logined In');
+          alert('Successfullly Logged In');
           navigation.navigate("HomeScreen");
         }
         else{

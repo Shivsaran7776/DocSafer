@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, SafeAreaView, Modal, Button } from 'react-native';
-import Background from './Background';
-import Btn from './Btn';
-import { darkGreen, green } from './Constants';
-import { StatusBar } from 'expo-status-bar';
-import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
+import { View, StyleSheet, Button, Text } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
-import MyModal from './Modal'; 
+import axios from 'axios';
 
-const UploadFile = () => {
+const PdfUpload = () => {
   const [selectedFile, setSelectedFile] = useState([])
 
   const handleFilePick = async () => {
@@ -55,49 +49,22 @@ const UploadFile = () => {
       console.log('No file selected.');
     }
   };
+
   return (
-    <Background>
-      <SafeAreaView>
-        <StatusBar />
-        <View style={styles.container2}>
-          <Button title="Select PDF" onPress={handleFilePick} />
-          {selectedFile && <Text>{selectedFile.name}</Text>}
-          <Button title="Upload PDF" onPress={handleUpload} disabled={!selectedFile} />
-        </View>
-      </SafeAreaView>
-    </Background>
+    <View style={styles.container}>
+      <Button title="Select PDF" onPress={handleFilePick} />
+      {selectedFile && <Text>{selectedFile.name}</Text>}
+      <Button title="Upload PDF" onPress={handleUpload} disabled={!selectedFile} />
+    </View>
   );
 };
 
-export default UploadFile;
-
 const styles = StyleSheet.create({
-  container2:{
-    flex: 2,
-    marginTop:20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   container: {
-    alignItems: 'center',
-    alignContent:'center',
-    marginTop: 300,
-    marginLeft:25 ,
-  },
-  modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalText: {
-    fontSize: 18,
-    marginBottom: 10,
   },
 });
+
+export default PdfUpload;

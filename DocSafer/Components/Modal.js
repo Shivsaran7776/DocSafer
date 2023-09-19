@@ -18,6 +18,7 @@ const MyModal = ({ visible, onDismiss, onSelect }) => {
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
+    height:3,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.7)',

@@ -2,21 +2,24 @@ const express = require('express')
 const router = express.Router()
 const user = require('../Schema/userSchema')
 const bcrypt  = require('bcrypt')
-const Post = require('../Schema/pdf')
+const pdf = require('../Schema/pdf')
 const multer = require('multer')
+const Pdf = require('../Schema/samplepdf')
+// const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, './PDF files');
+//     },
+//     filename: function (req, file, cb) {
+//         const uniqueSuffix=Date.now() + '-' + Math.round(Math.random() * 1E9);
+//       cb(null, uniqueSuffix+".pdf");
+//     }
+//   });
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, './PDF files');
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix=Date.now() + '-' + Math.round(Math.random() * 1E9);
-      cb(null, uniqueSuffix+".pdf");
-    }
-  });
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage })   
 
 
-  const upload = multer({ storage: storage })   
 
 router.post('/insert', async(req, res)=>{
     console.log('request form the Mobile', req.body);
@@ -98,7 +101,7 @@ router.post('/newpost',upload.single('file'),async(req,res)=>{
     const file=req.file;
     console.log(req.body);
     console.log('test for large file', req.file.size)
-    const post=new Post({
+    const post=new pdf({
         title:req.body.title,
         email:req.body.author_email,
         date:req.body.data,
@@ -110,4 +113,27 @@ router.post('/newpost',upload.single('file'),async(req,res)=>{
         "message":"success"
     })
 })
+
+
+router.post('/uploadpdf', upload.single('pdfFile'), async (req, res) => {
+    console.log('upload called')
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file provided' });
+      }
+  
+      const pdf = new Pdf({
+        title: req.file.originalname,
+        file: req.file.buffer,
+      });
+  
+      await pdf.save();
+  
+      return res.status(200).json({ message: 'File uploaded successfully' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'An error occurred' });
+    }
+  });
+
 module.exports = router
