@@ -25,7 +25,7 @@ const UploadFile = ({ route }) => {
     let year = curdate.getFullYear();
     setDate(`${day}-${month}-${year}`);
   }, []); // Empty dependency array to run once on mount
-
+// navigation.navigate('HomeScreen')
   const handleFilePick = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({ type: 'application/pdf' });
