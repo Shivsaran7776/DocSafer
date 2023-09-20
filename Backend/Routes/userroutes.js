@@ -2,9 +2,9 @@ const express = require('express')
 const router = express.Router()
 const user = require('../Schema/userSchema')
 const bcrypt  = require('bcrypt')
-const pdf = require('../Schema/pdf')
+const pdfModel = require('../Schema/pdf');
 const multer = require('multer')
-const Pdf = require('../Schema/samplepdf')
+
 // const storage = multer.diskStorage({
 //     destination: function (req, file, cb) {
 //       cb(null, './PDF files');
@@ -15,11 +15,8 @@ const Pdf = require('../Schema/samplepdf')
 //     }
 //   });
 
-
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage })   
-
-
 
 router.post('/insert', async(req, res)=>{
     console.log('request form the Mobile', req.body);
@@ -115,25 +112,27 @@ router.post('/newpost',upload.single('file'),async(req,res)=>{
 })
 
 
-router.post('/uploadpdf', upload.single('pdfFile'), async (req, res) => {
-    console.log('upload called')
+router.post('/uploadpdf', upload.single('File'), async (req, res) => {
+    console.log('upload called');
     try {
-      if (!req.file) {
-        return res.status(400).json({ error: 'No file provided' });
-      }
-  
-      const pdf = new Pdf({
-        title: req.file.originalname,
-        file: req.file.buffer,
-      });
-  
-      await pdf.save();
-  
-      return res.status(200).json({ message: 'File uploaded successfully' });
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file provided' });
+        }
+
+        const pdf = new pdfModel({
+            email: req.body.email, // Use req.body.email to get the email
+            date: req.body.date, // Use req.body.date to get the date
+            fileName: req.body.fileName, // Use req.body.fileName to get the file name
+            file: req.file.buffer,
+        });
+
+        await pdf.save();
+
+        return res.status(200).json({ message: 'File uploaded successfully' });
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'An error occurred' });
+        console.error(error);
+        return res.status(500).json({ error: 'An error occurred' });
     }
-  });
+});
 
 module.exports = router

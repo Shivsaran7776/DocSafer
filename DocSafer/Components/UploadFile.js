@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, SafeAreaView, Modal, Button } from 'react-native';
 import Background from './Background';
 import Btn from './Btn';
@@ -9,25 +9,28 @@ import { useNavigation } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
 import MyModal from './Modal'; 
 
-const UploadFile = ({route}) => {
-  const {email} = route.params;
-  console.log('fromt he upload checkl',email.email)
-  const navigation = useNavigation()
-  const [title, setTitle] = useState('')
-  // const [email, setEmail] = useState('')
-  const [date, setDate]= useState('')
-  // setEmail(Email)
-  const [selectedFile, setSelectedFile] = useState([])
+const UploadFile = ({ route }) => {
+
+  const { email } = route.params;
+  console.log('from the upload check', email.email);
+  const navigation = useNavigation();
+  const [selectedFile, setSelectedFile] = useState(null); // Initialize with null
+  const [date, setDate] = useState('');
+
+  useEffect(() => {
+    const curdate = new Date();
+
+    let day = curdate.getDate();
+    let month = curdate.getMonth() + 1;
+    let year = curdate.getFullYear();
+    setDate(`${day}-${month}-${year}`);
+  }, []); // Empty dependency array to run once on mount
 
   const handleFilePick = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({ type: 'application/pdf' });
-      console.log('hi')
-      console.log('result', result)
       if (result.assets[0]) {
         setSelectedFile(result.assets[0]);
-        console.log('from the test file',result.assets[0])
-        console.log('selected file', selectedFile.name)
       }
     } catch (err) {
       console.error(err);
@@ -37,43 +40,42 @@ const UploadFile = ({route}) => {
   const handleUpload = async () => {
     if (selectedFile) {
       const formData = new FormData();
-      formData.append('fileName',selectedFile.name )
-      const currentdate = new Date();
-      formData.append('date', currentdate.getDate())
-      console.log(currentdate.getDate())
-      formData.append('email', email.email)
-      formData.append('pdfFile', {
+      formData.append('File', {
         uri: selectedFile.uri,
         type: 'application/pdf',
-        name: selectedFile.name  
-    });
+        name: selectedFile.name,
+      });
+
+      formData.append('fileName', selectedFile.name)
+      formData.append('email', email.email);
+      formData.append('date', date);
 
       try {
-        const response = await axios.post('http://192.168.1.182:6080/uploadpdf', formData, {
+        const response = await axios.post('http://192.168.1.5:6080/uploadpdf', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-        }); 
+        });
 
         if (response.status === 200) {
           console.log('File uploaded successfully.');
-          alert('File uploaded successfully.')
-          navigation.navigate('HomeScreen', { email })
+          alert('File uploaded successfully.');
+          navigation.navigate('HomeScreen', { email });
         } else {
           console.log('File upload failed. Server returned:', response.data);
-          alert('Error Occured in file upload')
-          navigation.navigate('HomeScreen')
-
+          alert('Error Occurred in file upload.');
+          navigation.navigate('HomeScreen');
         }
       } catch (error) {
         console.error('Error uploading file:', error);
-        alert('Error Occured in file upload')
+        alert('Error Occurred in file upload.');
       }
     } else {
       console.log('No file selected.');
-      alert('No File Selected')
+      alert('No File Selected.');
     }
   };
+
   return (
     <Background>
       <SafeAreaView>
@@ -90,7 +92,6 @@ const UploadFile = ({route}) => {
 };
 
 export default UploadFile;
-
 const styles = StyleSheet.create({
   container2:{
     flex: 2,

@@ -30,7 +30,7 @@ const Signup = (props) => {
     } else if (password !== confirmPassword) {
       alert('Passwords do not match.');
     } else {
-      axios.post('http://192.168.1.182:6080/insert', {
+      axios.post('http://192.168.1.5:6080/insert', {
         name:firstName+lastName,
         email:email,
         password:password
