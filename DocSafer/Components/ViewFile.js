@@ -5,8 +5,10 @@ import Btn from './Btn';
 import { darkGreen, green } from './Constants';
 import { StatusBar } from 'expo-status-bar';
 
-function ViewFile(props) {
-  return (
+function ViewFile(route) {
+  const email= route.params
+  console.log('fromthe View file', email)
+    return (
     <Background>
       <SafeAreaView>
         <StatusBar/>

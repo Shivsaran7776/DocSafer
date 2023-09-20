@@ -9,14 +9,14 @@ import { useNavigation } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
 import MyModal from './Modal'; 
 
-const UploadFile = ({props}) => {
-  const { data:Email } = props.params.state;
+const UploadFile = ({route}) => {
+  const {email} = route.params;
+  console.log('fromt he upload checkl',email.email)
   const navigation = useNavigation()
   const [title, setTitle] = useState('')
-  const [email, setEmail] = useState('')
+  // const [email, setEmail] = useState('')
   const [date, setDate]= useState('')
-  setEmail(Email)
-  console.log('fromt he upload checkl',email)
+  // setEmail(Email)
   const [selectedFile, setSelectedFile] = useState([])
 
   const handleFilePick = async () => {
@@ -41,6 +41,7 @@ const UploadFile = ({props}) => {
       const currentdate = new Date();
       formData.append('date', currentdate.getDate())
       console.log(currentdate.getDate())
+      formData.append('email', email.email)
       formData.append('pdfFile', {
         uri: selectedFile.uri,
         type: 'application/pdf',
@@ -48,7 +49,7 @@ const UploadFile = ({props}) => {
     });
 
       try {
-        const response = await axios.post('http://192.168.1.30:6080/uploadpdf', formData, {
+        const response = await axios.post('http://192.168.1.182:6080/uploadpdf', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -57,7 +58,7 @@ const UploadFile = ({props}) => {
         if (response.status === 200) {
           console.log('File uploaded successfully.');
           alert('File uploaded successfully.')
-          navigation.navigate('HomeScreen')
+          navigation.navigate('HomeScreen', { email })
         } else {
           console.log('File upload failed. Server returned:', response.data);
           alert('Error Occured in file upload')
