@@ -135,4 +135,23 @@ router.post('/uploadpdf', upload.single('File'), async (req, res) => {
     }
 });
 
+router.get('/files/:email', async (req, res) => {
+    try {
+      const { email } = req.params;
+      console.log('from the backend', req.params.email)
+      // Find files associated with the provided email
+      const files = await pdfModel.find({ email });
+  
+      if (files.length === 0) {
+        return res.status(404).json({ message: 'No files found for this email.' });
+      }
+  
+      return res.status(200).json(files);
+    } catch (error) {
+      console.error('Error fetching files:', error);
+      return res.status(500).json({ error: 'An error occurred while fetching files.' });
+    }
+  });
+
+
 module.exports = router
