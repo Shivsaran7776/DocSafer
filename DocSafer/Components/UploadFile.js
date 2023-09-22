@@ -10,9 +10,14 @@ import * as DocumentPicker from 'expo-document-picker';
 import MyModal from './Modal'; 
 
 const UploadFile = ({ route }) => {
-
-  const { email } = route.params;
-  console.log('from the upload check', email.email);
+  const [email, setEmail] = useState('');
+  useEffect (()=>{
+    setEmail(route.params.email);
+  },[email])
+  console.log('from the Upload ', email)
+  // console.log('from the upload check', email);
+  
+  // console.log('check 2', auth);
   const navigation = useNavigation();
   const [selectedFile, setSelectedFile] = useState(null); // Initialize with null
   const [date, setDate] = useState('');
@@ -47,11 +52,11 @@ const UploadFile = ({ route }) => {
       });
 
       formData.append('fileName', selectedFile.name)
-      formData.append('email', email.email);
+      formData.append('email', email);
       formData.append('date', date);
 
       try {
-        const response = await axios.post('http://192.168.1.5:6080/uploadpdf', formData, {
+        const response = await axios.post('http://192.168.1.30:6080/uploadpdf', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -60,11 +65,11 @@ const UploadFile = ({ route }) => {
         if (response.status === 200) {
           console.log('File uploaded successfully.');
           alert('File uploaded successfully.');
-          navigation.navigate('HomeScreen', { email });
+          navigation.navigate('HomeScreen',{email});
         } else {
           console.log('File upload failed. Server returned:', response.data);
           alert('Error Occurred in file upload.');
-          navigation.navigate('HomeScreen');
+          navigation.navigate('HomeScreen', {email});
         }
       } catch (error) {
         console.error('Error uploading file:', error);
@@ -80,11 +85,16 @@ const UploadFile = ({ route }) => {
     <Background>
       <SafeAreaView>
         <StatusBar />
+        <View style={{marginHorizontal: 40, marginVertical: 60}}>
+      <Text style={{ color: 'white', fontSize: 64 }}>DocSafer</Text>
+      <Text style={{ color: 'white', fontSize: 20, left:20 ,marginBottom: 40,fontWeight:'bold'}}>Your E- document Wallet</Text>
+      <Text style={{ color: 'white', fontSize: 20, left:50 ,marginBottom: 10,fontWeight: 'bold',fontSize: 30}}>Upload your files</Text>
         <View style={styles.container2}>
-          <Button title="Select PDF" onPress={handleFilePick} />
           {selectedFile && <Text>{selectedFile.name}</Text>}
+          <Button title="Select PDF" onPress={handleFilePick} />
           
           <Button title="Upload PDF" onPress={handleUpload} disabled={!selectedFile} />
+        </View>
         </View>
       </SafeAreaView>
     </Background>
@@ -96,10 +106,10 @@ const styles = StyleSheet.create({
   container2:{
     flex: 2,
     borderRadius:10,
-    marginTop:330,
-    marginLeft:110,
-    width:200,
-    height:250,
+    marginTop:30,
+    marginLeft:-10,
+    width:350,
+    height:400,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor:'white',

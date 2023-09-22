@@ -20,7 +20,7 @@ const Login = (props) => {
     }
   
     const userData = { email:email, password:password};
-    axios.post('http://192.168.1.5:6080/login', userData)
+    axios.post('http://192.168.1.30:6080/login', userData)
       .then((res)=>{
         if(res.data.status==500){
           alert('Successfullly Logged In');
@@ -41,20 +41,13 @@ const Login = (props) => {
 
   return (
     <Background>
-    <View style={{alignItems: 'center', width: 460}}>
-    <Text
-      style={{
-        color: 'white',
-        fontSize: 64,
-        fontWeight: 'bold',
-        marginVertical: 20,
-      }}>
-      Login
-    </Text>
+    <View style={{marginHorizontal: 40, marginVertical: 40}}>
+    <Text style={{ color: 'white', fontSize: 64 }}>DocSafer</Text>
+    <Text style={{ color: 'white', fontSize: 20, left:20,marginBottom: 40,fontWeight:'bold'}}>Your E- document Wallet</Text>
     <View
       style={{
         backgroundColor: 'white',
-        height: 620,
+        height: 520,
         width: 375,
         borderTopLeftRadius: 130,
         borderBottomLeftRadius: 130,

@@ -30,7 +30,7 @@ const Signup = (props) => {
     } else if (password !== confirmPassword) {
       alert('Passwords do not match.');
     } else {
-      axios.post('http://192.168.1.5:6080/insert', {
+      axios.post('http://192.168.1.30:6080/insert', {
         name:firstName+lastName,
         email:email,
         password:password
@@ -50,26 +50,10 @@ const Signup = (props) => {
 
   return (
     <Background>
-      
-      <View style={{alignItems: 'center', width: 460}}>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 64,
-            fontWeight: 'bold',
-            marginTop: 20,
-          }}>
-          Register
-        </Text>
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 19,
-            fontWeight: 'bold',
-            marginBottom: 20,
-          }}>
-          Create a new account
-        </Text>
+      <View style={{marginHorizontal: 40, marginVertical: 60}}>
+      <Text style={{ color: 'white', fontSize: 64 }}>DocSafer</Text>
+      <Text style={{ color: 'white', fontSize: 20, left:20 ,marginBottom: 30}}>Your E- document Wallet</Text>
+        
         <View
           style={{
             backgroundColor: 'white',
@@ -80,12 +64,20 @@ const Signup = (props) => {
             paddingTop: 50,
             alignItems: 'center',
           }}>
-            
+       <Text
+          style={{
+            color: 'darkgreen',
+            fontSize: 23,
+            fontWeight: 'bold',
+            marginVertical: 5,
+          }}>
+          Register a new account
+        </Text>     
       <View
       style={{
         height: 620,
         width: 375,
-        paddingTop: 50,
+        paddingTop: 20,
         alignItems: 'center',
       }}
       >
