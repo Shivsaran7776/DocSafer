@@ -21,6 +21,7 @@ const Home = ({route}) => {
       <View style = {styles.login}>
       <Bttn bgColor={green} textColor='white' btnLabel="Upload Files" Press={() => navigation.navigate("UploadFile",  {email})} />
       <Bttn bgColor='white' textColor={darkGreen} btnLabel="View Files" Press={() => navigation.navigate("ViewFile", {email})} />
+      <Bttn bgColor={green} textColor='white' btnLabel="Logout" Press={() => navigation.navigate("Home")} />
       </View>
       </View>
     </Background> 
