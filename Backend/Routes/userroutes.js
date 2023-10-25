@@ -201,24 +201,6 @@ router.get('/files/:email', async (req, res) => {
     }
   });
 
-// router.get('/getItem/:id', async (req, res)=>{
-//     const id = req.params.id;
-//     console.log(id)
-//     const item = await pdfModel.findOne({_id:id})
-//     console.log(item.file.buffer)
-//     if(item){
-//         res.json({
-//             message:'success',
-//             data:item
-//         })
-//     }else{
-//         res.json({
-//             message:'failure'
-//         })
-//     }
-// })
-
-
 router.get('/getItem/:id', async (req, res) => {
     try {
       const id = req.params.id;
