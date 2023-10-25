@@ -3,9 +3,19 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity ,SafeAreaView } from
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/core';
 import Background from './Background';
+import { decode, encode } from 'base-64';
+import ViewAndDownload from './ViewAndDownload';
 
+if (!global.btoa) {
+  global.btoa = encode;
+}
+if (!global.atob) {
+  global.atob = decode;
+}
 const ViewFile = ({ route }) => {
   const [email, setEmail] = useState('');
+  const [uri, setURI] =useState('');
+
   useEffect (()=>{
     setEmail(route.params.email);
   },[email])
@@ -17,7 +27,7 @@ const ViewFile = ({ route }) => {
     // Fetch files associated with the authenticated user's email
     const fetchFiles = async () => {
       try {
-        const response = await axios.get(`http://192.168.1.30:6080/files/${email}`);
+        const response = await axios.get(`http://192.168.1.5:6080/files/${email}`);
         if (response.status === 200) {
           setFiles(response.data);
         } else {
@@ -30,26 +40,45 @@ const ViewFile = ({ route }) => {
 
     fetchFiles();
   }, [email]);
+  
+  
+  const handleViewFile = async (item) => {
+    let id = item._id;
+    console.log(id);
+    try {
+      const response = await axios.get(`http://192.168.1.5:6080/getpdf/${id}`);
+  
+      if (response.data) {
+        console.log(response.data.base64Data)
+        setURI(response.data.base64Data)
+        
+      } else {
+        console.log("Response data is empty.");
+      }
+    } catch (error) {
+      console.error("Error fetching item:", error);
+    }
+  };
 
   return (
     <Background>
       <SafeAreaView>
         <View style={styles.container}>
           <Text style={styles.header}>Your Uploaded Files</Text>
+         
             <FlatList
             data={files}
             keyExtractor={(item) => item._id}
             renderItem={({ item }) => (
               <View style={styles.fileItem}>
-                <Text>{item.fileName}</Text>
-                <Text>{item.date}</Text>
                 <TouchableOpacity
                 style={styles.viewButton}
                 onPress={() => handleViewFile(item)} // Add this function
               >
-                <Text style={styles.viewButtonText}>View/Download</Text>
+                <Text>{item.fileName}</Text>
+                <Text>{item.date}</Text>
+                {uri && <ViewAndDownload pdfURI={uri} />}
               </TouchableOpacity>
-
              </View>
           )}
           />
@@ -63,9 +92,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor:'white',
-    marginTop:20,
-    marginLeft:10,
+    marginTop:50,
+    marginLeft:50,
     padding: 16,
+    maxHeight:750,
   },
   header: {
     fontSize: 20,
@@ -73,12 +103,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   fileItem: {
-    borderBottomWidth: 1,
-    borderColor: '#ccc',
-    paddingVertical: 8,
+    margin:5,
+    borderWidth:5,
+    borderColor: 'black',
   },
   viewButton: {
-    backgroundColor: 'darkgreen',
+    backgroundColor: 'white',
     padding: 8,
     borderRadius: 5,
     marginTop: 8,

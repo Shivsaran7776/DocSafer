@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, SafeAreaView, Modal, Button } from 'react-native';
+import { View, StyleSheet, Text, SafeAreaView, Button } from 'react-native';
 import Background from './Background';
-import Btn from './Btn';
-import { darkGreen, green } from './Constants';
 import { StatusBar } from 'expo-status-bar';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import * as DocumentPicker from 'expo-document-picker';
-import MyModal from './Modal'; 
 
 const UploadFile = ({ route }) => {
   const [email, setEmail] = useState('');
@@ -15,9 +12,6 @@ const UploadFile = ({ route }) => {
     setEmail(route.params.email);
   },[email])
   console.log('from the Upload ', email)
-  // console.log('from the upload check', email);
-  
-  // console.log('check 2', auth);
   const navigation = useNavigation();
   const [selectedFile, setSelectedFile] = useState(null); // Initialize with null
   const [date, setDate] = useState('');
@@ -29,8 +23,8 @@ const UploadFile = ({ route }) => {
     let month = curdate.getMonth() + 1;
     let year = curdate.getFullYear();
     setDate(`${day}-${month}-${year}`);
-  }, []); // Empty dependency array to run once on mount
-// navigation.navigate('HomeScreen')
+  }, []); 
+  
   const handleFilePick = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({ type: 'application/pdf' });
@@ -54,9 +48,9 @@ const UploadFile = ({ route }) => {
       formData.append('fileName', selectedFile.name)
       formData.append('email', email);
       formData.append('date', date);
-
+console.log('check',selectedFile.uri);
       try {
-        const response = await axios.post('http://192.168.1.30:6080/uploadpdf', formData, {
+        const response = await axios.post('http://192.168.1.5:6080/uploadpdf', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

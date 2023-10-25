@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "expo-print": "^12.6.0"
+  }
+}

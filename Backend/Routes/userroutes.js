@@ -4,7 +4,7 @@ const user = require('../Schema/userSchema')
 const bcrypt  = require('bcrypt')
 const pdfModel = require('../Schema/pdf');
 const multer = require('multer')
-
+const { Binary } = require('mongodb');
 // const storage = multer.diskStorage({
 //     destination: function (req, file, cb) {
 //       cb(null, './PDF files');
@@ -112,8 +112,8 @@ router.post('/newpost',upload.single('file'),async(req,res)=>{
 })
 
 
-router.post('/uploadpdf', upload.single('File'), async (req, res) => {
-    console.log('upload called');
+router.post('/uploadpdf1', upload.single('File'), async (req, res) => {
+    console.log('upload called', req.file);
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file provided' });
@@ -135,21 +135,112 @@ router.post('/uploadpdf', upload.single('File'), async (req, res) => {
     }
 });
 
+router.post('/uploadpdf', upload.single('File'), async (req, res) => {
+    try {
+      const { email, date, fileName } = req.body;
+  
+      // Check if the file was uploaded
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+  
+      // Create a new PDF document using the PDF schema
+      const pdfDocument = new pdfModel({
+        email,
+        date,
+        fileName,
+        file: req.file.buffer,
+      });
+  
+      // Save the PDF document to the MongoDB database
+      await pdfDocument.save();
+  
+      res.status(200).json({ message: 'PDF uploaded successfully', fileId: pdfDocument._id });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error uploading PDF' });
+    }
+  });
+  
+  // Define a new route to retrieve the base64 string of a PDF by its ID
+  router.get('/getpdf/:id', async (req, res) => {
+    try {
+      const pdfDocument = await pdfModel.findById(req.params.id);
+  
+      if (!pdfDocument) {
+        return res.status(404).json({ message: 'PDF not found' });
+      }
+  
+      // Convert the PDF buffer to base64 and send it to the frontend
+      const base64Data = pdfDocument.file.toString('base64');
+      res.status(200).json({ base64Data });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error retrieving PDF' });
+    }
+  });
+
+  
+
 router.get('/files/:email', async (req, res) => {
     try {
       const { email } = req.params;
       console.log('from the backend', req.params.email)
       // Find files associated with the provided email
       const files = await pdfModel.find({ email });
+
   
       if (files.length === 0) {
         return res.status(404).json({ message: 'No files found for this email.' });
       }
-  
+      console.log('files', files);
       return res.status(200).json(files);
     } catch (error) {
       console.error('Error fetching files:', error);
       return res.status(500).json({ error: 'An error occurred while fetching files.' });
+    }
+  });
+
+// router.get('/getItem/:id', async (req, res)=>{
+//     const id = req.params.id;
+//     console.log(id)
+//     const item = await pdfModel.findOne({_id:id})
+//     console.log(item.file.buffer)
+//     if(item){
+//         res.json({
+//             message:'success',
+//             data:item
+//         })
+//     }else{
+//         res.json({
+//             message:'failure'
+//         })
+//     }
+// })
+
+
+router.get('/getItem/:id', async (req, res) => {
+    try {
+      const id = req.params.id;
+      console.log(id);
+      const item = await pdfModel.findOne({ _id: id });
+  
+      if (item) {
+        const base64String = item.file.buffer.toString('base64');
+
+        console.log('check',base64String, 'check');
+        res.json({
+          message: 'success',
+          data: base64String, 
+        });
+      } else {
+        res.json({
+          message: 'failure',
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching item:', error);
+      res.status(500).json({ message: 'error' });
     }
   });
 
