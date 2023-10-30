@@ -27,7 +27,7 @@ const ViewFile = ({ route }) => {
     // Fetch files associated with the authenticated user's email
     const fetchFiles = async () => {
       try {
-        const response = await axios.get(`http://192.168.1.5:6080/files/${email}`);
+        const response = await axios.get(`http://192.168.1.182:6080/files/${email}`);
         if (response.status === 200) {
           setFiles(response.data);
         } else {
@@ -46,7 +46,7 @@ const ViewFile = ({ route }) => {
     let id = item._id;
     console.log(id);
     try {
-      const response = await axios.get(`http://192.168.1.5:6080/getpdf/${id}`);
+      const response = await axios.get(`http://192.168.1.182:6080/getpdf/${id}`);
   
       if (response.data) {
         console.log(response.data.base64Data)

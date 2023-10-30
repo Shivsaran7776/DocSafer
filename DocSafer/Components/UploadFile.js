@@ -50,7 +50,7 @@ const UploadFile = ({ route }) => {
       formData.append('date', date);
 console.log('check',selectedFile.uri);
       try {
-        const response = await axios.post('http://192.168.1.5:6080/uploadpdf', formData, {
+        const response = await axios.post('http://192.168.1.182:6080/uploadpdf', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

@@ -20,7 +20,7 @@ const Login = (props) => {
     }
   
     const userData = { email:email, password:password};
-    axios.post('http://192.168.1.5:6080/login', userData)
+    axios.post('http://192.168.1.182:6080/login', userData)
       .then((res)=>{
         if(res.data.status==500){
           alert('Successfullly Logged In');
